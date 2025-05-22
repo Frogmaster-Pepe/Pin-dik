@@ -97,7 +97,7 @@ class Player2(pygame.sprite.Sprite):
 
 w_width, w_height = 1300, 700
 screen = pygame.display.set_mode((w_width, w_height))
-pygame.display.set_caption("1v1 Duel")
+pygame.display.set_caption("Brambor")
 clock = pygame.time.Clock()
 
 background = pygame.Surface((w_width,w_height))
