@@ -2,21 +2,19 @@ import pygame
 import sys
 
 pygame.init()
-
+w_width, w_height = 1600, 900
 class Player1(pygame.sprite.Sprite):
     def __init__(self): 
         super().__init__() 
-        self.original_image = pygame.image.load("pl1.png").convert_alpha()
+        self.original_image = pygame.image.load("pl1.png")
         self.original_image = pygame.transform.scale(self.original_image, (50,50))
-        self.rect = self.original_image.get_rect(midbottom = (100, 0.5*w_height))
-        self.image = self.original_image
-        
-        
-    
+        self.rect = self.original_image.get_rect(midbottom = (0.05*w_width, 0.5*w_height))
+        self.image = self.original_image    
+        self.angle = 0
     def player_input(self): 
         dx = 0
         dy = 0
-        angle = 0
+        
         keys = pygame.key.get_pressed()
         if keys[pygame.K_w]:
             dy -= 5
@@ -30,21 +28,26 @@ class Player1(pygame.sprite.Sprite):
         self.rect.y += dy
 
         if dx != 0 or dy != 0:
-            if dx > 0 and dy == 0: angle = 0
-            elif dx < 0 and dy == 0: angle = 180
-            elif dy < 0 and dx == 0: angle = -90
-            elif dy > 0 and dx == 0: angle = 90
-            elif dx > 0 and dy < 0: angle = -45
-            elif dx < 0 and dy < 0: angle = -135
-            elif dx > 0 and dy > 0: angle = 45
-            elif dx < 0 and dy > 0: angle = 135
+            if dx > 0 and dy == 0: self.angle = 0
+            elif dx < 0 and dy == 0: self.angle = 180
+            elif dy < 0 and dx == 0: self.angle = -90
+            elif dy > 0 and dx == 0: self.angle = 90
+            elif dx > 0 and dy < 0: self.angle = -45
+            elif dx < 0 and dy < 0: self.angle = -135
+            elif dx > 0 and dy > 0: self.angle = 45
+            elif dx < 0 and dy > 0: self.angle = 135
             
-
-        self.image = pygame.transform.rotate(self.original_image, -angle)
+        self.image = pygame.transform.rotate(self.original_image, -self.angle)
         self.rect = self.image.get_rect(center=self.rect.center)
-
-        self.rect.x = max(0, min(w_width - 50, self.rect.x))
-        self.rect.y = max(0, min(w_height - 50, self.rect.y))
+        
+        if self.rect.x == -50:
+            self.rect.x = w_width
+        elif self.rect.x == w_width:
+            self.rect.x = -50
+        elif self.rect.y == -50:
+            self.rect.y = w_height
+        elif self.rect.y == w_height:
+            self.rect.y = -50
 
     def update(self):
         self.player_input()
@@ -52,17 +55,16 @@ class Player1(pygame.sprite.Sprite):
 class Player2(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()  
-        self.original_image = pygame.image.load("pl2.png").convert_alpha()
+        self.original_image = pygame.image.load("pl2.png")
         self.original_image = pygame.transform.scale(self.original_image, (50,50))
-        self.rect = self.original_image.get_rect(midbottom = (1200, 0.5*w_height))
+        self.rect = self.original_image.get_rect(midbottom = ((0.95*w_width, 0.5*w_height)))
         self.image = self.original_image
-        
-        
-    
+        self.angle = 0    
+
     def player_input(self): 
         dx = 0
         dy = 0
-        angle = 0
+        
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP]:
             dy -= 5
@@ -76,26 +78,31 @@ class Player2(pygame.sprite.Sprite):
         self.rect.y += dy
 
         if dx != 0 or dy != 0:
-            if dx > 0 and dy == 0: angle = 180
-            elif dx < 0 and dy == 0: angle = 0
-            elif dy < 0 and dx == 0: angle = 90
-            elif dy > 0 and dx == 0: angle = -90
-            elif dx > 0 and dy < 0: angle = 135
-            elif dx < 0 and dy < 0: angle = 45
-            elif dx > 0 and dy > 0: angle = -135
-            elif dx < 0 and dy > 0: angle = -45
-            
+            if dx > 0 and dy == 0: self.angle = 180
+            elif dx < 0 and dy == 0: self.angle = 0
+            elif dy < 0 and dx == 0: self.angle = 90
+            elif dy > 0 and dx == 0:  self.angle = -90
+            elif dx > 0 and dy < 0:  self.angle = 135
+            elif dx < 0 and dy < 0:  self.angle = 45
+            elif dx > 0 and dy > 0:  self.angle = -135
+            elif dx < 0 and dy > 0:  self.angle = -45
 
-        self.image = pygame.transform.rotate(self.original_image, -angle)
+        self.image = pygame.transform.rotate(self.original_image, -self.angle)
         self.rect = self.image.get_rect(center=self.rect.center)
 
-        self.rect.x = max(0, min(w_width - 50, self.rect.x))
-        self.rect.y = max(0, min(w_height - 50, self.rect.y))
+        if self.rect.x == -50:
+            self.rect.x = w_width
+        elif self.rect.x == w_width:
+            self.rect.x = -50
+        elif self.rect.y == -50:
+            self.rect.y = w_height
+        elif self.rect.y == w_height:
+            self.rect.y = -50
 
     def update(self):
         self.player_input()
 
-w_width, w_height = 1300, 700
+
 screen = pygame.display.set_mode((w_width, w_height))
 pygame.display.set_caption("Brambor")
 clock = pygame.time.Clock()
