@@ -102,6 +102,16 @@ class Player2(pygame.sprite.Sprite):
     def update(self):
         self.player_input()
 
+class Projectile1(pygame.sprite.Sprite):
+    def __init__(self, vel):
+        super().__init__()  
+        self.image = pygame.image.load("bullet.png")
+        self.image = pygame.transform.scale(self.image, (5,5))
+
+
+
+
+
 
 screen = pygame.display.set_mode((w_width, w_height))
 pygame.display.set_caption("Brambor")
