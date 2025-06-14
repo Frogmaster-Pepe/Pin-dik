@@ -142,3 +142,40 @@ while True:
 
     pygame.display.update()
     clock.tick(60)
+
+
+
+
+class Projectile1(pygame.sprite.Sprite):
+    def __init__(self, pos, angle, vel):
+        super().__init__()
+        self.image = pygame.image.load("bluesword.png")
+        self.image = pygame.transform.scale(self.image, (10, 10))
+        self.rect = self.image.get_rect(center=pos)
+
+        radians = math.radians(angle)
+        self.velocity = pygame.math.Vector2(math.cos(radians), math.sin(radians)) * vel
+
+    def update(self):
+        self.rect.x += self.velocity.x
+        self.rect.y += self.velocity.y
+        if (self.rect.right < 0 or self.rect.left > w_width or
+            self.rect.bottom < 0 or self.rect.top > w_height):
+            self.kill()
+
+class Projectile2(pygame.sprite.Sprite):
+    def __init__(self, pos, angle, vel):
+        super().__init__()
+        self.image = pygame.image.load("redsword.png")
+        self.image = pygame.transform.scale(self.image, (10, 10))
+        self.rect = self.image.get_rect(center=pos)
+
+        radians = math.radians(angle)
+        self.velocity = pygame.math.Vector2(-math.cos(radians), -math.sin(radians)) * vel
+
+    def update(self):
+        self.rect.x += self.velocity.x
+        self.rect.y += self.velocity.y
+        if (self.rect.right < 0 or self.rect.left > w_width or
+            self.rect.bottom < 0 or self.rect.top > w_height):
+            self.kill()
