@@ -45,7 +45,7 @@ class Player1(pygame.sprite.Sprite):
 
     def can_shoot(self):
         now = time.time()
-        if now - self.last_shot >= 0.75:
+        if now - self.last_shot >= 0.5:
             self.last_shot = now
             return True
         return False
@@ -80,7 +80,7 @@ class Player2(pygame.sprite.Sprite):
 
     def can_shoot(self):
         now = time.time()
-        if now - self.last_shot >= 0.75:
+        if now - self.last_shot >= 0.35:
             self.last_shot = now
             return True
         return False
@@ -150,9 +150,6 @@ pygame.display.set_caption("Defend the crystal")
 clock = pygame.time.Clock()
 bg = pygame.transform.scale(pygame.image.load("background.png"), (w_width, w_height))
 sg = pygame.transform.scale(pygame.image.load("startground.png"), (w_width, w_height))
-eg = pygame.transform.scale(pygame.image.load("endground.png"), (w_width, w_height))
-diamond_over = pygame.image.load("diamond_over.png")
-over = pygame.transform.scale(pygame.image.load("diamond_over.png"),(100,100))
 
 font = pygame.font.SysFont(None, 40)
 font_small = pygame.font.SysFont(None, 30)
@@ -175,7 +172,7 @@ respawn = {}
 game_active = False
 show_intro = True
 score = 0
-enemy_baseSpeed = 3.0
+enemy_baseSpeed = 2.0
 boss_baseSpeed = 2.0
 colision_conter = 0
 
@@ -205,9 +202,9 @@ while True:
                 game_active = True
             elif game_active:
                 if e.key == pygame.K_f and player1 in players and player1.can_shoot():
-                    p1shots.add(Projectile(player1.rect.center, player1.angle, 25, "bluesword.png", (50,15)))
+                    p1shots.add(Projectile(player1.rect.center, player1.angle, 15, "bluesword.png", (50,15)))
                 if e.key == pygame.K_RCTRL and player2 in players and player2.can_shoot():
-                    p2shots.add(Projectile(player2.rect.center, player2.angle, 25, "redsword.png", (50,15)))
+                    p2shots.add(Projectile(player2.rect.center, player2.angle, 15, "redsword.png", (50,15)))
 
     if show_intro:
         screen.blit(sg, (0,0))
@@ -229,7 +226,6 @@ while True:
 
         if not wave_pending and not enemies:
             wave += 1
-            colision_conter = 0 
             wave_pending = True
             wave_timer = time.time()
             for _ in range(5 + wave*2):
@@ -239,10 +235,7 @@ while True:
                 for i in range(1):
                     direc = random.choice(["left","right"])
                     boss.add(Boss(direc, boss_baseSpeed + wave*0.5))
-            elif ((wave)//10):
-                for i in range(1):
-                    direc = random.choice(["left","right"])
-                    boss.add(Boss(direc, boss_baseSpeed + wave*0.5))        
+
         if wave_pending and time.time()-wave_timer > 2:
             wave_pending = False
 
@@ -286,36 +279,34 @@ while True:
             if  pygame.sprite.spritecollide(shot, boss, False) :
                 colision_conter = colision_conter + 1
                 shot.kill()
-                if colision_conter >= 5:
-                    score += 10
-                    colision_couter = 0
+                if colision_conter >= 3:
                     for b in boss:
                         b.kill()  
+                    score += 3
+                    colision_couter = 0
         for shot  in p2shots:
             if  pygame.sprite.spritecollide(shot, boss, False) :
                 colision_conter = colision_conter + 1
                 shot.kill()
-                if colision_conter >= 5:
-                    score += 10
-                    colision_conter = 0 
+                if colision_conter >= 3:
                     for b in boss:
                         b.kill()  
-                                  
+                    score += 3
+                    colision_conter = 0               
 
         if pygame.sprite.groupcollide(enemies, diamond_group, False, False):
             game_active = False
 
         scr = font.render(f"Score: {score}", True, (255,255,255))
-        screen.blit(scr, (0,0))
+        screen.blit(scr, (10,10))
 
     else:
-        screen.blit(eg, (0,0))
+        screen.fill((0,0,0))
         go = font.render("Game Over!", True, (255,0,0))
         ri = font.render("Press SPACE to Restart", True, (255,255,255))
-        screen.blit(scr, (w_width//2 - scr.get_width()//2, w_height//2 - 150))
-        screen.blit(go, (w_width//2 - go.get_width()//2, w_height//2 - 200))
-        screen.blit(ri, (w_width//2 - ri.get_width()//2, w_height//2 - 100))
-        screen.blit(over, over.get_rect(center =(w_width // 2, w_height // 2 )))
+        screen.blit(scr, (w_width//2 - scr.get_width()//2, w_height//2))
+        screen.blit(go, (w_width//2 - go.get_width()//2, w_height//2 - 40))
+        screen.blit(ri, (w_width//2 - ri.get_width()//2, w_height//2 + 40))
 
     pygame.display.update()
     clock.tick(60)
